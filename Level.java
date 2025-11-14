@@ -21,7 +21,7 @@ public class Level {
     private NPC npcs[];
     private Item items[];
 
-    // Constructors
+    // Constructor
     public Level(Tile tiles[][], int time, int levelNumber, Player player, NPC npcs[], Item items[]) {
         this.tiles = tiles;
         this.height = tiles.length;
@@ -54,6 +54,7 @@ public class Level {
         } else if (character instanceof NPC) {
             for (int i = 0; i < npcs.length; i++) {
                 if (npcs[i] == character) {
+                    npcs[i].setCurrTile(null);
                     npcs[i] = null;
                 }
             }
@@ -68,6 +69,9 @@ public class Level {
         for (int i = 0; i < items.length; i++) {
             if (items[i] == item) {
                 items[i] = null;
+                /*
+                 * implement remove from tile too.
+                 */
             }
         }
     }
@@ -126,8 +130,7 @@ public class Level {
             }
             if (nextTile.sharesColourWith(curr)) {
                 foundTile = true;
-            }
-            else {
+            } else {
                 curr = nextTile;
             }
         }
