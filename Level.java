@@ -1,15 +1,20 @@
+import java.util.ArrayList;
+
 /*
  * Level.java
  * A class to represent a level in the game, made up of a 2d tile grid, characters, and items.
  * Author: Robbie Jones
  * Date created: 13/11/25
- * Date last modified: 13/11/25
- * Version: 0.1.1
+ * Date last modified: 14/11/25
+ * Version: 0.1.2
  * Version history:
  * 0.1 - Initial version
  * 0.1.1 - Updated comments
+ * 0.1.2 - Updated NPC and Item removal logic
  * 0.2 - Added update method
  */
+
+
 public class Level {
     // Attributes
     private Tile tiles[][];
@@ -18,11 +23,11 @@ public class Level {
     private int timeRemaining;
     private int levelNumber;
     private Player player;
-    private NPC npcs[];
-    private Item items[];
+    private ArrayList<NPC> npcs;
+    private ArrayList<Item> items;
 
     // Constructor
-    public Level(Tile tiles[][], int time, int levelNumber, Player player, NPC npcs[], Item items[]) {
+    public Level(Tile tiles[][], int time, int levelNumber, Player player, ArrayList<NPC> npcs, ArrayList<Item> items) {
         this.tiles = tiles;
         this.height = tiles.length;
         this.width = tiles[0].length;
@@ -52,12 +57,7 @@ public class Level {
         if (character instanceof Player) {
             player = null;
         } else if (character instanceof NPC) {
-            for (int i = 0; i < npcs.length; i++) {
-                if (npcs[i] == character) {
-                    npcs[i].setCurrTile(null);
-                    npcs[i] = null;
-                }
-            }
+            npcs.remove(character);
         }
     }
 
@@ -66,12 +66,15 @@ public class Level {
      * @param item The item to remove
      */
     public void removeItem(Item item) {
-        for (int i = 0; i < items.length; i++) {
-            if (items[i] == item) {
-                items[i] = null;
-                /*
-                 * implement remove from tile too.
-                 */
+        items.remove(item);
+
+        // Also remove item from its tile
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Tile tile = tiles[y][x];
+                if (tile.getItem() == item) {
+                    tile.setItem(null);
+                }
             }
         }
     }
